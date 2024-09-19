@@ -9,7 +9,7 @@
 | Upgrade cards                                         |     ✅     |
 | Support tdata / pyrogram .session / telethon .session |     ✅     |
 
-## [Settings](https://github.com/NotMRGH/VertusClaimer/blob/main/.env-example)
+## [Settings](https://github.com/NotMRGH/VertusClaimer/blob/master/.env-example)
 | Setup                  | Description                                                             |
 |------------------------|-------------------------------------------------------------------------|
 | **API_ID / API_HASH**  | Platform data from which to launch a Telegram session (stock - Android) |
