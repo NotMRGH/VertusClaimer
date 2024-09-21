@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     UPGRADE_STORAGE: bool = False
     UPGRADE_POPULATION: bool = False
     UPGRADE_CARDS: bool = False
+    MAX_UPGRADE_CARDS_PRICE: int = 20
 
 
 settings = Settings()
