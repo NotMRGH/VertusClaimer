@@ -10,13 +10,14 @@
 | Support tdata / pyrogram .session / telethon .session |     ✅     |
 
 ## [Settings](https://github.com/NotMRGH/VertusClaimer/blob/master/.env-example)
-| Setup                  | Description                                                             |
-|------------------------|-------------------------------------------------------------------------|
-| **API_ID / API_HASH**  | Platform data from which to launch a Telegram session (stock - Android) |
-| **COMPLETE_TASK**      | Auto complete tasks (True / False)                                      |
-| **UPGRADE_FARM**       | Auto upgrade farm (True / False)                                        |
-| **UPGRADE_POPULATION** | Auto population (True / False)                                          |
-| **UPGRADE_CARDS**      | Auto cards (True / False)                                               |
+| Setup                       | Description                                                                                                 |
+|-----------------------------|-------------------------------------------------------------------------------------------------------------|
+| **API_ID / API_HASH**       | Platform data from which to launch a Telegram session (stock - Android)                                     |
+| **COMPLETE_TASK**           | Auto complete tasks (True / False)                                                                          |
+| **UPGRADE_FARM**            | Auto upgrade farm (True / False)                                                                            |
+| **UPGRADE_POPULATION**      | Auto population (True / False)                                                                              |
+| **UPGRADE_CARDS**           | Auto cards (True / False)                                                                                   |
+| **MAX_UPGRADE_CARDS_PRICE** | Determines the maximum amount the bot can spend on purchasing cards if it has sufficient balance. _(eg 20)_ |
 
 ## Installation
 You can download [**Repository**](https://github.com/NotMRGH/VertusClaimer) by cloning it to your system and installing the necessary dependencies:
