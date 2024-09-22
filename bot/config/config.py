@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     MAX_UPGRADE_CARDS_PRICE: int = 20
     MINIMUM_BALANCE: int = -1
     SLEEP_TIME: int = 1800
+    USE_PROXY_FROM_FILE: bool = False
 
 
 settings = Settings()
