@@ -6,6 +6,8 @@ class Settings(BaseSettings):
 
     API_ID: int
     API_HASH: str
+    USE_RANDOM_DELAY_IN_RUN: bool = True
+    RANDOM_DELAY_IN_RUN: list[int] = [0, 15]
     COMPLETE_TASK: bool = False
     UPGRADE_FARM: bool = False
     UPGRADE_STORAGE: bool = False

@@ -1,6 +1,7 @@
 import asyncio
 from urllib.parse import unquote
 import aiohttp
+import random
 from aiohttp_proxy import ProxyConnector
 
 from pyrogram import Client
@@ -391,6 +392,11 @@ class Claimer:
             logger.error(f"{self.session_name} | Request failed for card ID {card_id}, Card Name: {card_name}: {e}")
 
     async def run(self) -> None:
+        if settings.USE_RANDOM_DELAY_IN_RUN:
+            random_delay = random.randint(settings.RANDOM_DELAY_IN_RUN[0], settings.RANDOM_DELAY_IN_RUN[1])
+            logger.info(f"{self.session_name} | Bot will start in <y>{random_delay}s</y>")
+            await asyncio.sleep(random_delay)
+
         while True:
             try:
                 tg_web_data = await self.get_tg_web_data()
