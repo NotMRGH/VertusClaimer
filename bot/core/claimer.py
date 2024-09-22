@@ -93,14 +93,12 @@ class Claimer:
                 data = data.get("tonResponse")
                 data = data.get("isSuccess")
                 if not data:
-                    print("balance")
                     is_first = True
         except Exception as e:
             logger.error(f"{self.session_name} | Failed to Request balance: {e}")
 
         body = {}
         if is_first:
-            print("true")
             try:
                 async with http_client.post("https://api.thevertus.app/users/create-wallet", json=body) as response:
                     data = await response.json()
