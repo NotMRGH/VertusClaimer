@@ -8,6 +8,7 @@ from pyrogram import Client
 from better_proxy import Proxy
 from pyrogram.errors import Unauthorized, UserDeactivated, AuthKeyUnregistered
 from pyrogram.raw.functions.messages import RequestWebView
+from .agents import generate_random_user_agent
 
 from bot.utils import logger
 from bot.config import settings
@@ -91,6 +92,21 @@ class Claimer:
                 eo = data.get("user").get("earnedOffline") / 10 ** 18
                 logger.info(f"{self.session_name} | Vert Balance: {balance:.3f} | Earned Offline: {eo:.4f}")
                 logger.info(f"{self.session_name} | Farm Balance: {farm_b:.5f} | PPH: {pph:.4f}")
+        except Exception as e:
+            logger.error(f"{self.session_name} | Failed to Request login: {e}")
+
+    async def collect(self, http_client: aiohttp.ClientSession):
+        url = "https://api.thevertus.app/game-service/collect"
+        body = {}
+
+        try:
+            async with http_client.post(url, json=body) as response:
+                data = await response.json()
+                new_balance = data.get("newBalance")
+                a_b = new_balance / 10 ** 18 if new_balance is not None else 0
+                self.balance = a_b
+                logger.info(f"{self.session_name} | Collecting from storage")
+                logger.info(f"{self.session_name} | New vert Balance: {a_b:.3f}")
         except Exception as e:
             logger.error(f"{self.session_name} | Failed to Request login: {e}")
 
@@ -412,7 +428,12 @@ class Claimer:
                     if self.proxy:
                         await self.check_proxy(http_client=http_client)
 
+                    if settings.FAKE_USERAGENT:
+                        http_client.headers['user-agent'] = generate_random_user_agent(device_type='android',
+                                                                                       browser_type='chrome')
+
                     await self.login(http_client=http_client)
+                    await self.collect(http_client=http_client)
                     await self.daily_bonus(http_client=http_client)
                     await self.ads(http_client=http_client)
 
