@@ -7,7 +7,8 @@ from aiohttp_proxy import ProxyConnector
 from pyrogram import Client
 from better_proxy import Proxy
 from pyrogram.errors import Unauthorized, UserDeactivated, AuthKeyUnregistered
-from pyrogram.raw.functions.messages import RequestWebView
+from pyrogram.raw.functions.messages import RequestAppWebView
+from pyrogram.raw.types import InputBotAppShortName
 from .agents import generate_random_user_agent
 
 from bot.utils import logger
@@ -23,6 +24,7 @@ class Claimer:
         self.token = None
         self.proxy = proxy
         self.balance = None
+        self.ref_id = None
 
     async def check_proxy(self, http_client: aiohttp.ClientSession) -> None:
         response = await http_client.get("https://httpbin.org/ip", timeout=aiohttp.ClientTimeout(5))
@@ -54,17 +56,21 @@ class Claimer:
                     raise InvalidSession(self.session_name)
 
             peer = await self.tg_client.resolve_peer('Vertus_App_bot')
-            web_view = await self.tg_client.invoke(RequestWebView(
+            if settings.USE_REF_ID:
+                self.ref_id = settings.REF_ID
+            else:
+                self.ref_id = "5527112150"
+
+            web_view = await self.tg_client.invoke(RequestAppWebView(
                 peer=peer,
-                bot=peer,
+                app=InputBotAppShortName(bot_id=peer, short_name="app"),
                 platform='android',
-                from_bot_menu=False,
-                url='https://thevertus.app/'
+                write_allowed=True,
+                start_param=self.ref_id
             ))
 
             auth_url = web_view.url
-            tg_web_data = unquote(
-                string=auth_url.split('tgWebAppData=', maxsplit=1)[1].split('&tgWebAppVersion', maxsplit=1)[0])
+            tg_web_data = unquote(string=auth_url.split('tgWebAppData=')[1].split('&tgWebAppVersion')[0])
 
             if self.tg_client.is_connected:
                 await self.tg_client.disconnect()
@@ -79,11 +85,51 @@ class Claimer:
             await asyncio.sleep(delay=3)
 
     async def login(self, http_client: aiohttp.ClientSession):
-        url = "https://api.thevertus.app/users/get-data"
+        is_first = False
+        try:
+            async with http_client.get("https://api3.thevertus.app/balance") as response:
+                response.raise_for_status()
+                data = await response.json()
+                data = data.get("tonResponse")
+                data = data.get("isSuccess")
+                if not data:
+                    print("balance")
+                    is_first = True
+        except Exception as e:
+            logger.error(f"{self.session_name} | Failed to Request balance: {e}")
+
         body = {}
+        if is_first:
+            print("true")
+            try:
+                async with http_client.post("https://api.thevertus.app/users/create-wallet", json=body) as response:
+                    data = await response.json()
+                    if not data.get("walletAddress"):
+                        return
+            except Exception as e:
+                logger.error(f"{self.session_name} | Failed to Request create-wallet: {e}")
+
+            try:
+                async with http_client.get("https://api.thevertus.app/queue/check") as response:
+                    response.raise_for_status()
+                    data = await response.json()
+                    data = data.get("isSuccess")
+                    if not data:
+                        return
+            except Exception as e:
+                logger.error(f"{self.session_name} | Failed to Request check: {e}")
+
+            try:
+                async with http_client.post("https://api.thevertus.app/game-service/collect-first",
+                                            json=body) as response:
+                    data = await response.json()
+                    if not data.get("newBalance"):
+                        return
+            except Exception as e:
+                logger.error(f"{self.session_name} | Failed to Request collect-first: {e}")
 
         try:
-            async with http_client.post(url, json=body) as response:
+            async with http_client.post("https://api.thevertus.app/users/get-data", json=body) as response:
                 data = await response.json()
                 balance = int(data.get("user").get("balance")) / 10 ** 18
                 self.balance = balance
@@ -413,17 +459,17 @@ class Claimer:
             logger.info(f"{self.session_name} | Bot will start in <y>{random_delay}s</y>")
             await asyncio.sleep(random_delay)
 
+        tg_web_data = await self.get_tg_web_data()
+        self.token = tg_web_data
+        if not tg_web_data:
+            return
+
         while True:
             try:
-                tg_web_data = await self.get_tg_web_data()
                 proxy_conn = ProxyConnector().from_url(self.proxy) if self.proxy else None
-
                 async with aiohttp.ClientSession(headers=headers, connector=proxy_conn) as http_client:
-                    if not tg_web_data:
-                        return
-
-                    self.token = tg_web_data
                     http_client.headers['authorization'] = "Bearer " + self.token
+                    http_client.headers['referer'] = "https://thevertus.app/?tgWebAppStartParam= " + self.ref_id
 
                     if self.proxy:
                         await self.check_proxy(http_client=http_client)

@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     MINIMUM_BALANCE: int = -1
     SLEEP_TIME: int = 1800
     FAKE_USERAGENT: bool = True
+    USE_REF_ID: bool = False
+    REF_ID: str
+
     USE_PROXY_FROM_FILE: bool = False
 
 

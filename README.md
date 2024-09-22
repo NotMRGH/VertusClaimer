@@ -3,6 +3,7 @@
 |-------------------------------------------------------|:---------:|
 | Multithreading                                        |     ✅     |
 | Proxy binding to session                              |     ✅     |
+| Auto Referral                                         |     ✅     |
 | Auto-complete tasks (sponsor, community, ads)         |     ✅     |
 | Auto-collect storage                                  |     ✅     |
 | Upgrade farm                                          |     ✅     |
@@ -24,7 +25,9 @@
 | **MAX_UPGRADE_CARDS_PRICE** | Determines the maximum amount the bot can spend on purchasing cards if it has sufficient balance. _(e.g. 20)_                              |
 | **MINIMUM_BALANCE**         | This parameter defines the minimum balance that the bot is guaranteed to keep without spending it on upgrades or purchases. _(disable -1)_ |
 | **SLEEP_TIME**              | Pauses the bot in second for each session after completing all operations. This is to replicate human activity. _(e.g. 1800)_              |
-| **FAKE_USERAGENT**          | When this option is enabled, the bot will use random User-Agents for each account. This is to replicate human activity.                    |
+| **FAKE_USERAGENT**          | When this option is enabled, the bot will use random User-Agents for each account. This is to replicate human activity. (True / False)     |
+| **USE_REF_ID**              | Use Referral system (True / False)                                                                                                         |
+| **REF_ID**                  | Your referral id after startapp= (Your telegram ID)                                                                                        |
 | **USE_PROXY_FROM_FILE**     | Whether to use a proxy from the `bot/config/proxies.txt` file (True / False)                                                               |
 
 ## Installation
