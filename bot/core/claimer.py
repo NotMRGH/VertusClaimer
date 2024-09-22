@@ -227,6 +227,9 @@ class Claimer:
         headers = await self.get_headers()
         body = {"upgrade": "farm"}
 
+        if settings.MINIMUM_BALANCE != -1:
+            if self.balance <= settings.MINIMUM_BALANCE:
+                return
         try:
             async with aiohttp.ClientSession() as session:
                 response = await session.post(url, headers=headers, json=body)
@@ -259,6 +262,9 @@ class Claimer:
         headers = await self.get_headers()
         body = {"upgrade": "storage"}
 
+        if settings.MINIMUM_BALANCE != -1:
+            if self.balance <= settings.MINIMUM_BALANCE:
+                return
         try:
             async with aiohttp.ClientSession() as session:
                 response = await session.post(url, headers=headers, json=body)
@@ -293,6 +299,9 @@ class Claimer:
         headers = await self.get_headers()
         body = {"upgrade": "population"}
 
+        if settings.MINIMUM_BALANCE != -1:
+            if self.balance <= settings.MINIMUM_BALANCE:
+                return
         try:
             async with aiohttp.ClientSession() as session:
                 response = await session.post(url, headers=headers, json=body)
@@ -359,6 +368,9 @@ class Claimer:
         headers = await self.get_headers()
         body = {"cardId": card_id}
 
+        if settings.MINIMUM_BALANCE != -1:
+            if self.balance <= settings.MINIMUM_BALANCE:
+                return
         try:
             async with aiohttp.ClientSession() as session:
                 response = await session.post(url, headers=headers, json=body)
@@ -422,8 +434,8 @@ class Claimer:
 
             except InvalidSession as error:
                 raise error
-            logger.info(f"{self.session_name} | sleeping for 1800 seconds")
-            await asyncio.sleep(delay=1800)
+            logger.info(f"{self.session_name} | sleeping for {settings.SLEEP_TIME} seconds")
+            await asyncio.sleep(delay=settings.SLEEP_TIME)
 
 
 async def run_claimer(tg_client: Client):

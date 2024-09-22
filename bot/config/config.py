@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     UPGRADE_POPULATION: bool = False
     UPGRADE_CARDS: bool = False
     MAX_UPGRADE_CARDS_PRICE: int = 20
+    MINIMUM_BALANCE: int = -1
+    SLEEP_TIME: int = 1800
 
 
 settings = Settings()
