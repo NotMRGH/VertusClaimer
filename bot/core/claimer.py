@@ -290,7 +290,7 @@ class Claimer:
         body = {"upgrade": "farm"}
 
         if settings.MINIMUM_BALANCE != -1:
-            if self.balance <= settings.MINIMUM_BALANCE:
+            if float(self.balance) <= settings.MINIMUM_BALANCE:
                 return
         try:
             response = await http_client.post(url, json=body)
@@ -323,7 +323,7 @@ class Claimer:
         body = {"upgrade": "storage"}
 
         if settings.MINIMUM_BALANCE != -1:
-            if self.balance <= settings.MINIMUM_BALANCE:
+            if float(self.balance) <= settings.MINIMUM_BALANCE:
                 return
         try:
             response = await http_client.post(url, json=body)
@@ -358,7 +358,7 @@ class Claimer:
         body = {"upgrade": "population"}
 
         if settings.MINIMUM_BALANCE != -1:
-            if self.balance <= settings.MINIMUM_BALANCE:
+            if float(self.balance) <= settings.MINIMUM_BALANCE:
                 return
         try:
             response = await http_client.post(url, json=body)
@@ -423,7 +423,7 @@ class Claimer:
         body = {"cardId": card_id}
 
         if settings.MINIMUM_BALANCE != -1:
-            if self.balance <= settings.MINIMUM_BALANCE:
+            if float(self.balance) <= settings.MINIMUM_BALANCE:
                 return
         try:
             response = await http_client.post(url, json=body)
