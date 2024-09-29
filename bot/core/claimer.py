@@ -27,12 +27,14 @@ class Claimer:
         self.ref_id = None
 
     async def check_proxy(self, http_client: aiohttp.ClientSession) -> None:
-        response = await http_client.get("https://httpbin.org/ip", timeout=aiohttp.ClientTimeout(5))
-        response.raise_for_status()
-        data = await response.json()
-
-        ip = data.get('origin')
-        logger.info(f"{self.session_name} | Proxy IP: {ip}")
+        try:
+            response = await http_client.get("https://httpbin.org/ip", timeout=aiohttp.ClientTimeout(total=10))
+            response.raise_for_status()
+            data = await response.json()
+            ip = data.get('origin')
+            logger.info(f"{self.session_name} | Proxy IP: {ip}")
+        except aiohttp.ClientError as e:
+            logger.error(f"Error while checking proxy: {str(e)}")
 
     async def get_tg_web_data(self) -> str:
         if self.proxy:
